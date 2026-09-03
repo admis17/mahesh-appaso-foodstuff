@@ -2,8 +2,9 @@
 // Dubai Economy & Tourism trade license / FTA VAT registration certificate.
 // Update the placeholder fields (marked below) once the client confirms them.
 
-// Placeholder — swap in the real production domain once it's registered/deployed.
-export const siteUrl = 'https://maheshricetrading.com'
+// Live on Vercel. Update this if a custom domain (e.g. maheshricetrading.com) is
+// connected later — also update public/robots.txt and public/sitemap.xml to match.
+export const siteUrl = 'https://mahesh-appaso-foodstuff.vercel.app'
 
 export const company = {
   legalNameEn: 'Mahesh Appaso Foodstuff Trading L.L.C',

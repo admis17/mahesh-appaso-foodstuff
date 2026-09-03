@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://maheshricetrading.com/</loc>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://maheshricetrading.com/about</loc>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/about</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://maheshricetrading.com/products</loc>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://maheshricetrading.com/products/basmati-rice</loc>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/basmati-rice</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://maheshricetrading.com/products/non-basmati-rice</loc>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/non-basmati-rice</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://maheshricetrading.com/services</loc>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/services</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://maheshricetrading.com/global-reach</loc>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/global-reach</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://maheshricetrading.com/contact</loc>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
