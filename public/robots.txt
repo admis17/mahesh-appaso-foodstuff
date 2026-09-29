@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /admin
 
 Sitemap: https://mahesh-appaso-foodstuff.vercel.app/sitemap.xml

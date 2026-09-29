@@ -2,24 +2,29 @@ import { motion } from 'framer-motion'
 import { Plane, Ship, FileCheck2 } from 'lucide-react'
 import Seo from '../components/Seo'
 import PageHero from '../components/PageHero'
-import RegionGrid from '../components/RegionGrid'
-import StatsBar from '../components/StatsBar'
+import DeparturesBoard from '../components/DeparturesBoard'
+import RingStats from '../components/RingStats'
+import HeroGlobe from '../components/HeroGlobe'
+import ModeScene from '../components/ModeScene'
 import SectionTag from '../components/SectionTag'
 import CTASection from '../components/CTASection'
 
 const routes = [
   {
     icon: Ship,
+    scene: 'sea',
     title: 'Sea Freight',
     blurb: 'FCL and LCL container shipments routed through Jebel Ali and regional ports.',
   },
   {
     icon: Plane,
+    scene: 'air',
     title: 'Air Freight',
     blurb: 'Time-sensitive consignments moved through Dubai’s air cargo hubs.',
   },
   {
     icon: FileCheck2,
+    scene: 'customs',
     title: 'Customs & Compliance',
     blurb: 'Export documentation, certificates of origin and customs clearance handled in-house.',
   },
@@ -34,6 +39,7 @@ export default function GlobalReach() {
         path="/markets"
       />
       <PageHero
+        aside={<HeroGlobe className="w-64 sm:w-80 lg:w-[26rem] mx-auto" />}
         tag="Global Reach"
         title="A Rice Trade Network Spanning Six Regions"
         accent="Six Regions"
@@ -41,8 +47,8 @@ export default function GlobalReach() {
         image="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1600&auto=format&fit=crop"
       />
 
-      <RegionGrid />
-      <StatsBar />
+      <DeparturesBoard />
+      <RingStats />
 
       <section className="bg-ivory py-16 sm:py-24">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
@@ -62,10 +68,10 @@ export default function GlobalReach() {
                 transition={{ duration: 0.5, delay: i * 0.1 }}
                 className="rounded-2xl p-8 border border-line/60 bg-sand/40"
               >
-                <div className="w-12 h-12 rounded-full bg-deep flex items-center justify-center mb-6">
-                  <r.icon className="w-5.5 h-5.5 text-gold" />
-                </div>
-                <h3 className="font-display text-xl font-semibold text-ink mb-3">{r.title}</h3>
+                <ModeScene kind={r.scene} />
+                <h3 className="flex items-center gap-2 font-display text-xl font-semibold text-ink mb-3">
+                  <r.icon className="w-5 h-5 text-gold" aria-hidden="true" /> {r.title}
+                </h3>
                 <p className="text-sm text-slate leading-relaxed">{r.blurb}</p>
               </motion.div>
             ))}
@@ -74,6 +80,7 @@ export default function GlobalReach() {
       </section>
 
       <CTASection
+        effect="compass"
         tag="Expand With Us"
         title="Looking to Import Into a New Market?"
         accent="Into a New Market?"

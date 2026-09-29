@@ -1,14 +1,19 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
-import About from './pages/About'
-import Products from './pages/Products'
-import ProductCategory from './pages/ProductCategory'
-import ProductDetail from './pages/ProductDetail'
-import Services from './pages/Services'
-import GlobalReach from './pages/GlobalReach'
-import Contact from './pages/Contact'
-import NotFound from './pages/NotFound'
+
+// Home ships in the main bundle; every other page is fetched when first visited.
+const About = lazy(() => import('./pages/About'))
+const Products = lazy(() => import('./pages/Products'))
+const ProductCategory = lazy(() => import('./pages/ProductCategory'))
+const ProductDetail = lazy(() => import('./pages/ProductDetail'))
+const Services = lazy(() => import('./pages/Services'))
+const GlobalReach = lazy(() => import('./pages/GlobalReach'))
+const Contact = lazy(() => import('./pages/Contact'))
+const NotFound = lazy(() => import('./pages/NotFound'))
+// Admin area: its own chunk, only downloaded by people who open /admin.
+const AdminApp = lazy(() => import('./admin/AdminApp'))
 
 // Old URLs from the previous site map — kept so existing links still land somewhere.
 const legacyRedirects = {
@@ -23,6 +28,14 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route
+          path="/admin/*"
+          element={
+            <Suspense fallback={<div className="min-h-screen bg-deep" />}>
+              <AdminApp />
+            </Suspense>
+          }
+        />
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />

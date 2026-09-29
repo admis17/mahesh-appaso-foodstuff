@@ -1,8 +1,8 @@
-import { Outlet } from 'react-router-dom'
+import { MotionConfig } from 'framer-motion'
 import Header from './Header'
 import Footer from './Footer'
 import WhatsAppFloat from './WhatsAppFloat'
-import ScrollToTop from './ScrollToTop'
+import PageTransition from './PageTransition'
 import JsonLd from './JsonLd'
 import { company, siteUrl } from '../data/company'
 
@@ -25,15 +25,17 @@ const organizationSchema = {
 
 export default function Layout() {
   return (
-    <div className="min-h-screen flex flex-col bg-ivory">
-      <JsonLd data={organizationSchema} />
-      <ScrollToTop />
-      <Header />
-      <main className="flex-1">
-        <Outlet />
-      </main>
-      <Footer />
-      <WhatsAppFloat />
-    </div>
+    // reducedMotion="user": framer skips transform/layout animation for visitors who ask for less motion.
+    <MotionConfig reducedMotion="user">
+      <div className="min-h-screen flex flex-col bg-ivory">
+        <JsonLd data={organizationSchema} />
+        <Header />
+        <main className="flex-1">
+          <PageTransition />
+        </main>
+        <Footer />
+        <WhatsAppFloat />
+      </div>
+    </MotionConfig>
   )
 }

@@ -1,19 +1,32 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { Mail, MapPin, Clock, Send, MessageCircle } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from 'framer-motion'
+import { Mail, MapPin, Clock, Send, MessageCircle, Copy, Check } from 'lucide-react'
 import Seo from '../components/Seo'
 import PageHero from '../components/PageHero'
 import SectionTag from '../components/SectionTag'
 import SocialLinks from '../components/SocialLinks'
 import { company, whatsappLink, mailtoLink } from '../data/company'
+import { isSupabaseConfigured } from '../lib/supabaseConfig'
 
 const infoCards = [
-  { icon: MapPin, label: 'Visit Us', value: `${company.address.line1}, ${company.address.line2}, ${company.address.city}, ${company.address.country}` },
-  { icon: Mail, label: 'Email Us', value: company.email, href: `mailto:${company.email}` },
+  { icon: MapPin, label: 'Visit Us', value: `${company.address.line1}, ${company.address.line2}, ${company.address.city}, ${company.address.country}`, copy: true },
+  { icon: Mail, label: 'Email Us', value: company.email, href: `mailto:${company.email}`, copy: true },
   { icon: Clock, label: 'Working Hours', value: company.hours },
 ]
 
 const initialForm = { name: '', company_: '', email: '', phone: '', product: '', message: '' }
+const REQUIRED = ['name', 'email', 'message']
+const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+function validate(form) {
+  const errors = {}
+  if (!form.name.trim()) errors.name = 'Please add your name.'
+  if (!form.email.trim()) errors.email = 'Please add your email.'
+  else if (!EMAIL.test(form.email.trim())) errors.email = 'That email address looks incomplete.'
+  if (!form.message.trim()) errors.message = 'Tell us a little about the order.'
+  return errors
+}
 
 function buildMessage(form) {
   return [
@@ -26,23 +39,245 @@ function buildMessage(form) {
   ].filter(Boolean).join('\n')
 }
 
+function CopyButton({ value, label }) {
+  const [copied, setCopied] = useState(false)
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(value)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1800)
+    } catch {
+      /* clipboard blocked — the text is still selectable */
+    }
+  }
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      aria-label={copied ? `${label} copied` : `Copy ${label.toLowerCase()}`}
+      className="absolute top-4 right-4 inline-flex items-center gap-1.5 rounded-full border border-line/70 bg-ivory px-2.5 py-1 text-[11px] font-semibold text-slate hover:text-deep hover:border-gold transition-colors"
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        {copied ? (
+          <motion.span key="ok" className="inline-flex items-center gap-1 text-deep" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.5, opacity: 0 }}>
+            <Check className="w-3.5 h-3.5" /> Copied
+          </motion.span>
+        ) : (
+          <motion.span key="copy" className="inline-flex items-center gap-1" initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.5, opacity: 0 }}>
+            <Copy className="w-3.5 h-3.5" /> Copy
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </button>
+  )
+}
+
+/** Input with a floating label, a gold underline that draws from the centre, and a shake on error. */
+function Field({ id, label, required, value, error, attempt, children }) {
+  const reduce = useReducedMotion()
+  const shake = useAnimationControls()
+  const [focused, setFocused] = useState(false)
+  const floated = focused || value
+  // Shake once per send attempt that leaves this field in error. Keyed on `attempt` only, so
+  // the error clearing (or changing) while the user types never re-triggers it.
+  useEffect(() => {
+    if (attempt && error && !reduce) shake.start({ x: [0, -8, 7, -5, 3, 0], transition: { duration: 0.45 } })
+  }, [attempt]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  return (
+    <motion.div animate={shake} onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}>
+      <div className="relative">
+        <label
+          htmlFor={id}
+          className={`absolute left-4 pointer-events-none transition-all duration-200 ${
+            floated ? 'top-2 text-[10px] tracking-[0.14em] text-gold' : 'top-4 text-sm tracking-normal text-slate/80'
+          } font-semibold uppercase`}
+        >
+          {label} {required && <span className="text-gold">*</span>}
+        </label>
+        {children}
+        <span
+          aria-hidden="true"
+          className={`absolute left-3 right-3 bottom-0 h-0.5 origin-center rounded-full transition-transform duration-300 ${error ? 'bg-rust' : 'bg-gold'} ${
+            focused || error ? 'scale-x-100' : 'scale-x-0'
+          }`}
+        />
+      </div>
+      <AnimatePresence>
+        {error && (
+          <motion.p
+            id={`${id}-error`}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="text-xs text-rust mt-1.5 overflow-hidden"
+          >
+            {error}
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  )
+}
+
+/** Ring that fills as the required fields are completed. */
+function CompletionRing({ done, total }) {
+  const R = 16
+  const C = 2 * Math.PI * R
+  return (
+    <div className="flex items-center gap-3 text-xs text-slate" aria-live="polite">
+      <svg viewBox="0 0 40 40" className="w-10 h-10 -rotate-90">
+        <circle cx="20" cy="20" r={R} fill="none" stroke="var(--color-line)" strokeWidth="3" />
+        <motion.circle
+          cx="20"
+          cy="20"
+          r={R}
+          fill="none"
+          stroke={done === total ? 'var(--color-pine)' : 'var(--color-gold)'}
+          strokeWidth="3"
+          strokeLinecap="round"
+          strokeDasharray={C}
+          animate={{ strokeDashoffset: C * (1 - done / total) }}
+          transition={{ type: 'spring', stiffness: 120, damping: 18 }}
+        />
+      </svg>
+      <span>{done === total ? 'Ready to send' : `${done} of ${total} required fields`}</span>
+    </div>
+  )
+}
+
+/** Send button that turns into a paper plane, flies off, then shows a drawn tick. */
+function SendButton({ onSend, children, className, icon: Icon, sentLabel }) {
+  const reduce = useReducedMotion()
+  const plane = useAnimationControls()
+  const [state, setState] = useState('idle') // idle | flying | sent
+
+  const click = (e) => {
+    e.preventDefault()
+    if (!onSend()) return
+    // States advance on timers rather than awaiting the flight: sending opens WhatsApp or the
+    // mail app, which backgrounds this tab and pauses animation frames until the visitor returns.
+    if (!reduce) {
+      setState('flying')
+      plane.start({ x: [0, -6, 180], y: [0, 4, -90], rotate: [0, -10, -25], opacity: [1, 1, 0], transition: { duration: 0.8, times: [0, 0.2, 1], ease: 'easeIn' } })
+    }
+    setTimeout(() => setState('sent'), reduce ? 0 : 800)
+    setTimeout(() => {
+      setState('idle')
+      plane.set({ x: 0, y: 0, rotate: 0, opacity: 1 })
+    }, 3400)
+  }
+
+  return (
+    <button type="submit" onClick={click} className={`relative overflow-visible ${className}`}>
+      <AnimatePresence mode="wait" initial={false}>
+        {state === 'sent' ? (
+          <motion.span key="sent" className="inline-flex items-center gap-2" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
+            <svg viewBox="0 0 16 16" className="w-4 h-4" aria-hidden="true">
+              <motion.path d="M3 8.5 6.5 12 13 4.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.4 }} />
+            </svg>
+            {sentLabel}
+          </motion.span>
+        ) : (
+          <motion.span key="idle" className="inline-flex items-center gap-2.5" exit={{ opacity: 0 }}>
+            <motion.span animate={plane} className="inline-flex">
+              <Icon className="w-4 h-4" />
+            </motion.span>
+            <span className={state === 'flying' ? 'opacity-40 transition-opacity' : ''}>{children}</span>
+          </motion.span>
+        )}
+      </AnimatePresence>
+    </button>
+  )
+}
+
+/** Location pin that drops onto the map with a ripple when it scrolls into view. */
+function MapPinDrop() {
+  const reduce = useReducedMotion()
+  return (
+    <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-full" aria-hidden="true">
+      <motion.div
+        initial={reduce ? false : { y: -160, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ type: 'spring', stiffness: 380, damping: 14, delay: 0.4 }}
+      >
+        <MapPin className="w-10 h-10 text-rust drop-shadow-[0_6px_6px_rgba(0,0,0,0.3)]" fill="var(--color-ivory)" />
+      </motion.div>
+      {!reduce && (
+        <motion.span
+          className="absolute left-1/2 top-full -translate-x-1/2 -translate-y-1/2 w-6 h-3 rounded-[50%] border-2 border-rust"
+          initial={{ scale: 0, opacity: 0 }}
+          whileInView={{ scale: [0, 3.5], opacity: [0.9, 0] }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.75, duration: 1 }}
+        />
+      )}
+    </div>
+  )
+}
+
 export default function Contact() {
-  const [form, setForm] = useState(initialForm)
+  const [params] = useSearchParams()
+  // Product pages link here with ?product=… (including any chosen broken grade).
+  const [form, setForm] = useState(() => ({ ...initialForm, product: params.get('product') ?? '' }))
+  const [errors, setErrors] = useState({})
+  const [attempt, setAttempt] = useState(0)
+  const [honeypot, setHoneypot] = useState('')
 
-  const update = (key) => (e) => setForm((f) => ({ ...f, [key]: e.target.value }))
+  const update = (key) => (e) => {
+    const value = e.target.value
+    setForm((f) => ({ ...f, [key]: value }))
+    if (errors[key]) setErrors((er) => ({ ...er, [key]: undefined }))
+  }
 
-  const sendWhatsApp = (e) => {
-    e.preventDefault()
+  const check = () => {
+    const found = validate(form)
+    setErrors(found)
+    setAttempt((a) => a + 1)
+    return Object.keys(found).length === 0
+  }
+
+  // Every valid send is also filed in the admin inbox (when Supabase is set up), so leads are kept
+  // even if the visitor never finishes sending in WhatsApp or their mail app. Bots that fill the
+  // hidden "website" field are skipped. Saving runs in the background: WhatsApp has to open
+  // synchronously inside the click or popup blockers stop it.
+  const record = (channel) => {
+    if (!isSupabaseConfigured || honeypot) return
+    import('../data/remote').then(({ saveEnquiry }) => saveEnquiry(form, channel)).catch(() => {})
+  }
+
+  const sendWhatsApp = () => {
+    if (!check()) return false
+    record('whatsapp')
     window.open(whatsappLink(buildMessage(form)), '_blank', 'noreferrer')
+    return true
   }
 
-  const sendEmail = (e) => {
-    e.preventDefault()
-    window.location.href = mailtoLink(
-      `Product Enquiry${form.product ? ` — ${form.product}` : ''}`,
-      buildMessage(form)
-    )
+  const sendEmail = () => {
+    if (!check()) return false
+    record('email')
+    window.location.href = mailtoLink(`Product Enquiry${form.product ? ` — ${form.product}` : ''}`, buildMessage(form))
+    return true
   }
+
+  const done = REQUIRED.filter((k) => (k === 'email' ? EMAIL.test(form.email.trim()) : form[k].trim())).length
+  const field = (key, label, extra = {}) => ({
+    id: `f-${key}`,
+    label,
+    value: form[key],
+    error: errors[key],
+    attempt,
+    ...extra,
+  })
+  const inputProps = (key) => ({
+    id: `f-${key}`,
+    value: form[key],
+    onChange: update(key),
+    'aria-invalid': Boolean(errors[key]),
+    'aria-describedby': errors[key] ? `f-${key}-error` : undefined,
+    className: inputClass,
+  })
 
   return (
     <>
@@ -52,6 +287,7 @@ export default function Contact() {
         path="/contact"
       />
       <PageHero
+        effect="typing"
         tag="Contact Us"
         title="Let's Talk About Your Order"
         accent="Your Order"
@@ -69,8 +305,9 @@ export default function Contact() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="rounded-2xl p-6 border border-line/60 bg-sand/40"
+                className="relative rounded-2xl p-6 border border-line/60 bg-sand/40"
               >
+                {c.copy && <CopyButton value={c.value} label={c.label.replace(' Us', '')} />}
                 <c.icon className="w-5.5 h-5.5 text-gold mb-4" />
                 <p className="eyebrow text-slate mb-2">{c.label}</p>
                 {c.href ? (
@@ -105,48 +342,60 @@ export default function Contact() {
                 Tell Us What You <span className="display-accent text-rust">Need</span>
               </h2>
 
-              <form className="space-y-5">
+              <form className="space-y-5" noValidate>
+                {/* Spam trap: invisible to people, tempting to form-filling bots. */}
+                <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
+                  <label>
+                    Website
+                    <input type="text" name="website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={(e) => setHoneypot(e.target.value)} />
+                  </label>
+                </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <Field label="Full Name" required>
-                    <input required type="text" value={form.name} onChange={update('name')} placeholder="Your name" className={inputClass} />
+                  <Field {...field('name', 'Full Name', { required: true })}>
+                    <input type="text" autoComplete="name" {...inputProps('name')} />
                   </Field>
-                  <Field label="Company">
-                    <input type="text" value={form.company_} onChange={update('company_')} placeholder="Company name" className={inputClass} />
+                  <Field {...field('company_', 'Company')}>
+                    <input type="text" autoComplete="organization" {...inputProps('company_')} />
                   </Field>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <Field label="Email" required>
-                    <input required type="email" value={form.email} onChange={update('email')} placeholder="you@company.com" className={inputClass} />
+                  <Field {...field('email', 'Email', { required: true })}>
+                    <input type="email" autoComplete="email" {...inputProps('email')} />
                   </Field>
-                  <Field label="Phone">
-                    <input type="tel" value={form.phone} onChange={update('phone')} placeholder="+00 000 000 0000" className={inputClass} />
+                  <Field {...field('phone', 'Phone')}>
+                    <input type="tel" autoComplete="tel" {...inputProps('phone')} />
                   </Field>
                 </div>
 
-                <Field label="Product / Grade">
-                  <input type="text" value={form.product} onChange={update('product')} placeholder="e.g. IR64 Sortex 5%, 20 MT" className={inputClass} />
+                <Field {...field('product', 'Product / Grade')}>
+                  <input type="text" {...inputProps('product')} />
                 </Field>
 
-                <Field label="Message" required>
-                  <textarea required rows={5} value={form.message} onChange={update('message')} placeholder="Tell us the quantity, destination port and timeline..." className={`${inputClass} resize-none`} />
+                <Field {...field('message', 'Message', { required: true })}>
+                  <textarea rows={5} {...inputProps('message')} className={`${inputClass} resize-none`} />
                 </Field>
 
-                <div className="flex flex-wrap gap-4 pt-2">
-                  <button
-                    type="submit"
-                    onClick={sendWhatsApp}
-                    className="group inline-flex items-center justify-center gap-2.5 font-semibold tracking-wide uppercase rounded-full transition-colors duration-300 px-7 py-3.5 text-sm bg-[#25D366] text-white hover:bg-[#1fb959]"
+                <div className="flex flex-wrap items-center gap-4 pt-2">
+                  <SendButton
+                    onSend={sendWhatsApp}
+                    icon={MessageCircle}
+                    sentLabel="Opened in WhatsApp"
+                    className="inline-flex items-center justify-center font-semibold tracking-wide uppercase rounded-full transition-colors duration-300 px-7 py-3.5 text-sm bg-[#25D366] text-white hover:bg-[#1fb959]"
                   >
-                    <MessageCircle className="w-4 h-4" /> Message on WhatsApp
-                  </button>
-                  <button
-                    type="submit"
-                    onClick={sendEmail}
-                    className="group inline-flex items-center justify-center gap-2.5 font-semibold tracking-wide uppercase rounded-full transition-colors duration-300 px-7 py-3.5 text-sm border border-ink/20 text-ink hover:border-gold hover:text-gold"
+                    Message on WhatsApp
+                  </SendButton>
+                  <SendButton
+                    onSend={sendEmail}
+                    icon={Send}
+                    sentLabel="Opened in your email app"
+                    className="inline-flex items-center justify-center font-semibold tracking-wide uppercase rounded-full transition-colors duration-300 px-7 py-3.5 text-sm border border-ink/20 text-ink hover:border-gold hover:text-gold"
                   >
-                    <Send className="w-4 h-4" /> Send via Email
-                  </button>
+                    Send via Email
+                  </SendButton>
+                  <div className="sm:ml-auto">
+                    <CompletionRing done={done} total={REQUIRED.length} />
+                  </div>
                 </div>
               </form>
             </motion.div>
@@ -156,7 +405,7 @@ export default function Contact() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.7, delay: 0.15 }}
-              className="rounded-2xl overflow-hidden border border-line/60 h-80 lg:h-full min-h-[320px]"
+              className="relative rounded-2xl overflow-hidden border border-line/60 h-80 lg:h-full min-h-[320px]"
             >
               <iframe
                 title="Mahesh Rice Trading location"
@@ -165,6 +414,7 @@ export default function Contact() {
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               />
+              <MapPinDrop />
             </motion.div>
           </div>
         </div>
@@ -174,15 +424,4 @@ export default function Contact() {
 }
 
 const inputClass =
-  'w-full rounded-xl border border-line/70 bg-sand/30 px-4 py-3 text-sm text-ink placeholder:text-slate/60 focus:outline-none focus:ring-2 focus:ring-gold/60 focus:border-gold transition-colors'
-
-function Field({ label, required, children }) {
-  return (
-    <label className="block">
-      <span className="block text-xs font-semibold uppercase tracking-wider text-slate mb-2">
-        {label} {required && <span className="text-gold">*</span>}
-      </span>
-      {children}
-    </label>
-  )
-}
+  'w-full rounded-xl border border-line/70 bg-sand/30 px-4 pt-6 pb-2.5 text-sm text-ink focus:outline-none focus:border-gold/60 aria-[invalid=true]:border-rust/60 transition-colors'

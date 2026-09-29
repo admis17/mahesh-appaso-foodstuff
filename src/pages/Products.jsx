@@ -1,7 +1,7 @@
 import Seo from '../components/Seo'
 import Breadcrumbs from '../components/Breadcrumbs'
 import PageHero from '../components/PageHero'
-import ProductGrid from '../components/ProductGrid'
+import ProductManifest from '../components/ProductManifest'
 import CTASection from '../components/CTASection'
 
 export default function Products() {
@@ -13,6 +13,7 @@ export default function Products() {
         path="/products"
       />
       <PageHero
+        effect="stencil"
         tag="Our Products"
         title="Rice & Pulses, On Record"
         accent="On Record"
@@ -20,8 +21,9 @@ export default function Products() {
         image="https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1600&auto=format&fit=crop"
       />
       <Breadcrumbs items={[{ label: 'Home', to: '/' }, { label: 'Products' }]} />
-      <ProductGrid showHeading={false} />
+      <ProductManifest />
       <CTASection
+        effect="beam"
         tag="Custom Sourcing"
         title="Looking for a Grade Not Listed Here?"
         accent="Not Listed Here?"

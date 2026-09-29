@@ -1,10 +1,28 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.jsx'
+import { isSupabaseConfigured } from './lib/supabaseConfig'
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+// With Supabase configured, admin-managed content is loaded before the app first renders, so
+// every component sees it from the start. Without it (or if it's slow), the built-in data is used.
+// The admin area fetches its own data, so it skips this.
+async function boot() {
+  if (isSupabaseConfigured && !window.location.pathname.startsWith('/admin')) {
+    try {
+      const { loadSiteData } = await import('./data/remote')
+      const result = await loadSiteData()
+      if (result.reason || result.errors?.length) console.warn('Site content:', result)
+    } catch (err) {
+      console.warn('Site content: using built-in data —', err)
+    }
+  }
+
+  const { default: App } = await import('./App.jsx')
+  createRoot(document.getElementById('root')).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  )
+}
+
+boot()

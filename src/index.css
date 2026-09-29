@@ -102,6 +102,56 @@
   animation: marquee 28s linear infinite;
   width: fit-content;
 }
+.ticker-track {
+  animation-duration: 60s;
+}
+
+/* Departures board: each character change snaps down like a split-flap leaf. */
+@keyframes flap {
+  from { transform: scaleY(0.2); opacity: 0.4; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+.flap {
+  display: inline-block;
+  animation: flap 70ms ease-out;
+  transform-origin: 50% 50%;
+}
+
+/* Products manifest: a glint crosses the row on hover, like light on a polished label. */
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+.shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgba(233, 197, 120, 0.35) 50%, transparent 65%);
+  transform: translateX(-120%);
+  pointer-events: none;
+}
+.shine:hover::after {
+  transition: transform 0.9s ease;
+  transform: translateX(120%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shine:hover::after {
+    transition: none;
+    transform: translateX(-120%);
+  }
+  .flap {
+    animation: none;
+  }
+
+  .animate-marquee {
+    animation: none;
+  }
+  .ticker-track {
+    width: auto;
+    overflow-x: auto;
+  }
+}
 
 @keyframes float-slow {
   0%, 100% { transform: translateY(0); }

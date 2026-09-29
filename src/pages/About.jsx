@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion'
+import { useRef } from 'react'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { Target, Eye, HeartHandshake, ShieldCheck, Building2, FileBadge2 } from 'lucide-react'
 import Seo from '../components/Seo'
 import PageHero from '../components/PageHero'
@@ -51,6 +52,7 @@ export default function About() {
         path="/company"
       />
       <PageHero
+        effect="tracking"
         tag="About Us"
         title="Built on Trust, Trading Across Borders"
         accent="Trading Across Borders"
@@ -60,7 +62,7 @@ export default function About() {
 
       <section className="bg-ivory py-16 sm:py-24">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-start">
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -72,21 +74,21 @@ export default function About() {
                 From Ras Al Khor to <span className="display-accent text-rust">Global Markets</span>
               </h2>
               <div className="space-y-5 text-slate text-base sm:text-lg leading-relaxed">
-                <p>
+                <ReadAlong>
                   {company.legalNameEn} operates out of Ras Al Khor Industrial, one of Dubai&apos;s
                   established trade and logistics districts, minutes from the emirate&apos;s port
                   and airport infrastructure.
-                </p>
-                <p>
+                </ReadAlong>
+                <ReadAlong>
                   We trade rice and pulses — nothing else on the books: raw sortexed and steam
                   non-basmati rice, whole and split pulses — matching origin mills to the
                   specifications and volumes our buyers need.
-                </p>
-                <p>
+                </ReadAlong>
+                <ReadAlong>
                   Every shipment moves with proper documentation: certificates of origin, invoicing
                   aligned to UAE VAT requirements, and customs paperwork handled in-house so buyers
                   face fewer delays at their end.
-                </p>
+                </ReadAlong>
               </div>
             </motion.div>
 
@@ -95,11 +97,11 @@ export default function About() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.7, delay: 0.15 }}
-              className="rounded-2xl overflow-hidden aspect-[4/5]"
+              className="rounded-2xl overflow-hidden aspect-[4/5] lg:sticky lg:top-24"
             >
               <img
-                src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?q=80&w=1200&auto=format&fit=crop"
-                alt="Dubai warehouse and logistics district"
+                src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=1200&auto=format&fit=crop"
+                alt="Warehouse racking stocked with packed goods ready for dispatch"
                 className="w-full h-full object-cover"
                 loading="lazy"
               />
@@ -124,13 +126,15 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="bg-ivory rounded-2xl p-8 border border-line/60"
+                className="h-full"
               >
+                <SpotlightCard>
                 <div className="w-12 h-12 rounded-full bg-deep flex items-center justify-center mb-6">
                   <v.icon className="w-5.5 h-5.5 text-gold" />
                 </div>
                 <h3 className="font-display text-xl font-semibold text-ink mb-3">{v.title}</h3>
                 <p className="text-sm text-slate leading-relaxed">{v.blurb}</p>
+                </SpotlightCard>
               </motion.div>
             ))}
           </div>
@@ -157,11 +161,13 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                className="rounded-2xl p-7 border border-ivory/15 bg-ivory/5"
+                className="h-full"
               >
-                <c.icon className="w-6 h-6 text-gold mb-4" />
-                <p className="eyebrow text-ivory/50 mb-2">{c.label}</p>
-                <p className="font-display text-lg sm:text-xl font-semibold text-ivory break-words">{c.value}</p>
+                <HoloCard>
+                  <c.icon className="w-6 h-6 text-gold mb-4" />
+                  <p className="eyebrow text-ivory/50 mb-2">{c.label}</p>
+                  <p className="font-display text-lg sm:text-xl font-semibold text-ivory break-words">{c.value}</p>
+                </HoloCard>
               </motion.div>
             ))}
           </div>
@@ -169,11 +175,72 @@ export default function About() {
       </section>
 
       <CTASection
+        effect="signature"
         tag="Let's Work Together"
         title="Have a Sourcing Need in Mind?"
         accent="in Mind?"
         body="Tell us the rice grade, quantity and destination — we'll come back with a workable quote."
       />
     </>
+  )
+}
+
+/** Paragraph that brightens from faint to full as it scrolls up through the reading zone. */
+function ReadAlong({ children }) {
+  const ref = useRef(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 90%', 'start 50%'] })
+  const opacity = useTransform(scrollYProgress, [0, 1], [0.18, 1])
+  return (
+    <motion.p ref={ref} style={{ opacity }}>
+      {children}
+    </motion.p>
+  )
+}
+
+/** Card with a soft light that follows the cursor. */
+function SpotlightCard({ children }) {
+  const onMove = (e) => {
+    const r = e.currentTarget.getBoundingClientRect()
+    e.currentTarget.style.setProperty('--mx', e.clientX - r.left + 'px')
+    e.currentTarget.style.setProperty('--my', e.clientY - r.top + 'px')
+  }
+  return (
+    <div
+      onPointerMove={onMove}
+      className="group relative h-full overflow-hidden bg-ivory rounded-2xl p-8 border border-line/60"
+    >
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+        style={{ background: 'radial-gradient(260px circle at var(--mx) var(--my), rgba(217,164,65,0.22), transparent 70%)' }}
+      />
+      <div className="relative">{children}</div>
+    </div>
+  )
+}
+
+/** Licence card with a security-foil shimmer that shifts with the pointer angle. */
+function HoloCard({ children }) {
+  const onMove = (e) => {
+    const r = e.currentTarget.getBoundingClientRect()
+    const px = (e.clientX - r.left) / r.width
+    const py = (e.clientY - r.top) / r.height
+    e.currentTarget.style.setProperty('--holo-x', px * 100 + '%')
+    e.currentTarget.style.setProperty('--holo-angle', 110 + (px - 0.5) * 60 + (py - 0.5) * 30 + 'deg')
+  }
+  return (
+    <div onPointerMove={onMove} className="group relative h-full overflow-hidden rounded-2xl p-7 border border-ivory/15 bg-ivory/5">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-screen"
+        style={{
+          backgroundImage:
+            'linear-gradient(var(--holo-angle, 110deg), transparent 20%, rgba(255,120,200,0.18) 35%, rgba(120,220,255,0.2) 45%, rgba(255,240,140,0.22) 55%, rgba(140,255,180,0.18) 65%, transparent 80%)',
+          backgroundSize: '220% 220%',
+          backgroundPosition: 'var(--holo-x, 50%) 50%',
+        }}
+      />
+      <div className="relative">{children}</div>
+    </div>
   )
 }

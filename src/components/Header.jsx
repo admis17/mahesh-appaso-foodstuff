@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import { Menu, X, Mail, MapPin } from 'lucide-react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion'
 import { company } from '../data/company'
 import Button from './Button'
 import SocialLinks from './SocialLinks'
@@ -15,10 +15,10 @@ const navItems = [
   { to: '/contact', label: 'Contact' },
 ]
 
-function Logo() {
+function Logo({ compact = false }) {
   return (
     <Link to="/" className="flex items-center gap-3 shrink-0">
-      <svg viewBox="0 0 64 64" className="w-9 h-9 sm:w-10 sm:h-10 shrink-0">
+      <svg viewBox="0 0 64 64" className={`shrink-0 transition-all duration-300 ${compact ? 'w-8 h-8 sm:w-9 sm:h-9' : 'w-9 h-9 sm:w-10 sm:h-10'}`}>
         <circle cx="32" cy="32" r="32" fill="#0E3B2C" />
         <path d="M32 12c8 6 12 13 12 20s-4 14-12 20c-8-6-12-13-12-20s4-14 12-20Z" fill="none" stroke="#D9A441" strokeWidth="2.5" />
         <path d="M20.5 26h23M18 32h28M20.5 38h23" stroke="#D9A441" strokeWidth="2.5" strokeLinecap="round" />
@@ -34,9 +34,15 @@ function Logo() {
 export default function Header() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [compact, setCompact] = useState(false)
+  const { scrollYProgress } = useScroll()
+  const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 })
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12)
+    const onScroll = () => {
+      setScrolled(window.scrollY > 12)
+      setCompact(window.scrollY > 120)
+    }
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
@@ -65,8 +71,8 @@ export default function Header() {
       </div>
 
       <header className={`sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'bg-ivory/95 backdrop-blur shadow-[0_1px_0_0_rgba(23,32,27,0.08)]' : 'bg-ivory'}`}>
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-10 h-18 sm:h-20 flex items-center justify-between">
-          <Logo />
+        <div className={`max-w-[1400px] mx-auto px-6 lg:px-10 flex items-center justify-between transition-[height] duration-300 ${compact ? 'h-14 sm:h-16' : 'h-18 sm:h-20'}`}>
+          <Logo compact={compact} />
 
           <nav className="hidden lg:flex items-center gap-9">
             {navItems.map((item) => (
@@ -95,6 +101,12 @@ export default function Header() {
             {open ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
+        {/* Reading progress */}
+        <motion.div
+          aria-hidden="true"
+          className="absolute left-0 right-0 bottom-0 h-[2px] origin-left bg-gradient-to-r from-gold via-gold-light to-gold"
+          style={{ scaleX: progress }}
+        />
       </header>
 
       <AnimatePresence>

@@ -1,7 +1,7 @@
 import Seo from '../components/Seo'
 import PageHero from '../components/PageHero'
-import ServicesGrid from '../components/ServicesGrid'
-import ProcessSteps from '../components/ProcessSteps'
+import ServicesRail from '../components/ServicesRail'
+import ProcessStack from '../components/ProcessStack'
 import CTASection from '../components/CTASection'
 
 export default function Services() {
@@ -13,15 +13,17 @@ export default function Services() {
         path="/trade"
       />
       <PageHero
+        effect="fill"
         tag="Our Services"
         title="Rice Trade Services Built Around Your Supply Chain"
         accent="Your Supply Chain"
         body="Import, export, sourcing, packaging and logistics — handled under one roof so you deal with fewer parties."
-        image="https://images.unsplash.com/photo-1601598851547-4137b04ba1c1?q=80&w=1600&auto=format&fit=crop"
+        image="https://images.unsplash.com/photo-1494412519320-aa613dfb7738?q=80&w=1600&auto=format&fit=crop"
       />
-      <ServicesGrid showHeading={false} />
-      <ProcessSteps />
+      <ServicesRail />
+      <ProcessStack />
       <CTASection
+        effect="lines"
         tag="Talk to Us"
         title="Need a Service Not Listed Here?"
         accent="Not Listed Here?"
