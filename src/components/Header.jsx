@@ -8,10 +8,10 @@ import SocialLinks from './SocialLinks'
 
 const navItems = [
   { to: '/', label: 'Home' },
-  { to: '/about', label: 'About' },
+  { to: '/company', label: 'About' },
   { to: '/products', label: 'Products' },
-  { to: '/services', label: 'Services' },
-  { to: '/global-reach', label: 'Global Reach' },
+  { to: '/trade', label: 'Services' },
+  { to: '/markets', label: 'Global Reach' },
   { to: '/contact', label: 'Contact' },
 ]
 

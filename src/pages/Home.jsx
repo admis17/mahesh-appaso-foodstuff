@@ -17,8 +17,8 @@ export default function Home() {
   return (
     <>
       <Seo
-        title="Mahesh Rice Trading | Basmati & Non-Basmati Rice Exporter, Dubai"
-        description="Dubai-based importer and exporter of Basmati and Non-Basmati rice. Wholesale and bulk supply to buyers across the GCC, Africa, Asia, Europe and the Americas."
+        title="Mahesh Rice Trading | Rice & Pulses Trader, Dubai"
+        description="Dubai-based trader of Indian rice and pulses. Wholesale and bulk supply to buyers across the GCC, Africa, Asia, Europe and the Americas."
         path="/"
       />
       <Hero />
@@ -64,13 +64,13 @@ export default function Home() {
                   key trade and logistics hubs.
                 </p>
                 <p>
-                  We connect Basmati and Non-Basmati rice mills with wholesale buyers,
+                  We connect Indian rice mills and pulse processors with wholesale buyers,
                   distributors and retailers across the GCC, Africa, Asia, Europe and the
                   Americas — backed by clean documentation and a valid FTA tax registration.
                 </p>
               </div>
               <div className="mt-8">
-                <Button to="/about" variant="deep">Our Full Story</Button>
+                <Button to="/company" variant="deep">Our Full Story</Button>
               </div>
             </motion.div>
           </div>
@@ -83,7 +83,7 @@ export default function Home() {
         <div className="h-[50vh] sm:h-[60vh] relative">
           <img
             src="https://images.unsplash.com/photo-1596797038530-2c107229654b?q=80&w=1800&auto=format&fit=crop"
-            alt="Raw Basmati rice grains graded for export quality"
+            alt="Raw rice grains graded for export quality"
             className="absolute inset-0 w-full h-full object-cover"
             loading="lazy"
           />

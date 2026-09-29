@@ -31,7 +31,7 @@ export default function GlobalReach() {
       <Seo
         title="Global Reach | Rice Exports to 6 Regions | Mahesh Rice Trading"
         description="Rice exported from Dubai to the GCC, East & North Africa, South Asia, Southeast Asia, Europe and the USA & Canada — sea and air freight with full export documentation."
-        path="/global-reach"
+        path="/markets"
       />
       <PageHero
         tag="Global Reach"

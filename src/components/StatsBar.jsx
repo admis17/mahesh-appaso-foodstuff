@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
 
 const stats = [
-  { value: '2', label: 'Rice Grades — Basmati & Non-Basmati' },
+  { value: '12', label: 'Products — Rice & Pulses' },
   { value: '6', label: 'Regions Served Worldwide' },
   { value: '100%', label: 'Lots Checked Before Dispatch' },
   { value: 'Dubai', label: 'Home Base, UAE' },

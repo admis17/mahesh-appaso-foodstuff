@@ -22,16 +22,16 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         >
-          <SectionTag light>Rice Trading · Based in Dubai, UAE</SectionTag>
+          <SectionTag light>Rice &amp; Pulses Trading · Based in Dubai, UAE</SectionTag>
 
           <h1 className="display-hero text-[clamp(2.6rem,7vw,5.5rem)] mt-6 mb-8 max-w-3xl text-balance">
-            Premium Basmati Rice,
+            Rice &amp; Pulses,
             <br />
             <span className="display-accent text-gold-light">Exported From Dubai</span>
           </h1>
 
           <p className="text-ivory/75 text-base sm:text-lg max-w-xl leading-relaxed mb-10">
-            Mahesh Rice Trading supplies Basmati and Non-Basmati rice to wholesale
+            Mahesh Rice Trading supplies Indian rice and pulses to wholesale
             buyers across the GCC, Africa, Asia, Europe and the Americas.
           </p>
 

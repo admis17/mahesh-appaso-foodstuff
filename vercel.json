@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    { "source": "/about", "destination": "/company", "permanent": true },
+    { "source": "/services", "destination": "/trade", "permanent": true },
+    { "source": "/global-reach", "destination": "/markets", "permanent": true },
+    { "source": "/products/basmati-rice", "destination": "/products/rice", "permanent": true },
+    { "source": "/products/non-basmati-rice", "destination": "/products/rice", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]

@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom'
 import { Mail, MapPin, Clock, ShieldCheck } from 'lucide-react'
 import { company } from '../data/company'
-import { riceCategories } from '../data/products'
+import { productCategories } from '../data/products'
 import SocialLinks from './SocialLinks'
 
 const exploreLinks = [
-  { to: '/about', label: 'About Us' },
+  { to: '/company', label: 'About Us' },
   { to: '/products', label: 'Products' },
-  { to: '/services', label: 'Services' },
-  { to: '/global-reach', label: 'Global Reach' },
+  { to: '/trade', label: 'Services' },
+  { to: '/markets', label: 'Global Reach' },
   { to: '/contact', label: 'Contact' },
 ]
 
@@ -29,7 +29,7 @@ export default function Footer() {
               <span className="font-display text-xl font-semibold">Mahesh Rice Trading</span>
             </div>
             <p className="text-ivory/65 text-sm leading-relaxed max-w-sm mb-6">
-              Dubai-based importer and exporter of Basmati and Non-Basmati rice, supplying
+              Dubai-based trader of rice and pulses, supplying
               wholesale buyers and distributors across the GCC, Africa, Asia, Europe and
               the Americas.
             </p>
@@ -53,7 +53,7 @@ export default function Footer() {
           <div>
             <h4 className="eyebrow text-gold-light mb-5">Products</h4>
             <ul className="space-y-3">
-              {riceCategories.map((p) => (
+              {productCategories.map((p) => (
                 <li key={p.slug}>
                   <Link to={`/products/${p.slug}`} className="text-sm text-ivory/75 hover:text-gold-light transition-colors">
                     {p.name}

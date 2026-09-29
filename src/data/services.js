@@ -9,7 +9,7 @@ export const services = [
     name: 'Rice Export Services',
     icon: 'Send',
     blurb:
-      'Basmati and non-basmati consignments packed, documented and shipped to buyers across the GCC, Africa, Asia, Europe and the Americas.',
+      'Rice and pulse consignments packed, documented and shipped to buyers across the GCC, Africa, Asia, Europe and the Americas.',
   },
   {
     name: 'Wholesale & Bulk Supply',

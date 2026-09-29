@@ -10,7 +10,7 @@ const values = [
   {
     icon: Target,
     title: 'Our Mission',
-    blurb: 'Move quality Basmati and Non-Basmati rice from mill to buyer efficiently, with clean paperwork and no surprises.',
+    blurb: 'Move quality rice and pulses from origin to buyer efficiently, with clean paperwork and no surprises.',
   },
   {
     icon: Eye,
@@ -47,14 +47,14 @@ export default function About() {
     <>
       <Seo
         title="About Us | Mahesh Rice Trading, Dubai"
-        description="Mahesh Appaso Foodstuff Trading L.L.C is a Dubai-based Basmati and Non-Basmati rice trading house, licensed by Dubai Economy and Tourism and VAT registered with the UAE FTA."
-        path="/about"
+        description="Mahesh Appaso Foodstuff Trading L.L.C is a Dubai-based rice and pulses trading house, licensed by Dubai Economy and Tourism and VAT registered with the UAE FTA."
+        path="/company"
       />
       <PageHero
         tag="About Us"
         title="Built on Trust, Trading Across Borders"
         accent="Trading Across Borders"
-        body="A Dubai-based rice trading house connecting origin mills with buyers across the GCC, Africa, Asia, Europe and the Americas."
+        body="A Dubai-based rice & pulses trading house connecting origin mills with buyers across the GCC, Africa, Asia, Europe and the Americas."
         image="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?q=80&w=1600&auto=format&fit=crop"
       />
 
@@ -78,8 +78,8 @@ export default function About() {
                   and airport infrastructure.
                 </p>
                 <p>
-                  We trade Basmati and Non-Basmati rice exclusively — 1121, traditional, steam,
-                  sella, broken and non-basmati grades — matching origin mills to the
+                  We trade rice and pulses — nothing else on the books: raw sortexed and steam
+                  non-basmati rice, whole and split pulses — matching origin mills to the
                   specifications and volumes our buyers need.
                 </p>
                 <p>

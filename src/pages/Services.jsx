@@ -10,7 +10,7 @@ export default function Services() {
       <Seo
         title="Rice Trade Services | Import, Export & Sourcing | Mahesh Rice Trading"
         description="Rice import, export, wholesale supply, sourcing, private labeling and logistics services from Dubai — handled end-to-end for GCC, Africa, Asia, Europe and Americas buyers."
-        path="/services"
+        path="/trade"
       />
       <PageHero
         tag="Our Services"

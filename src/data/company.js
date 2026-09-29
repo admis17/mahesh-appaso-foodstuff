@@ -10,7 +10,7 @@ export const company = {
   legalNameEn: 'Mahesh Appaso Foodstuff Trading L.L.C',
   legalNameAr: 'ماهيش اباسو لتجارة المواد الغذائية ش.ذ.م.م',
   brandShort: 'Mahesh Rice Trading',
-  tagline: 'Basmati & Non-Basmati Rice, Exported From Dubai',
+  tagline: 'Rice & Pulses, Traded From Dubai',
 
   address: {
     line1: 'SMARK 2, Office 3',

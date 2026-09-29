@@ -39,7 +39,7 @@ export default function Contact() {
   const sendEmail = (e) => {
     e.preventDefault()
     window.location.href = mailtoLink(
-      `Rice Enquiry${form.product ? ` — ${form.product}` : ''}`,
+      `Product Enquiry${form.product ? ` — ${form.product}` : ''}`,
       buildMessage(form)
     )
   }
@@ -48,7 +48,7 @@ export default function Contact() {
     <>
       <Seo
         title="Contact Us | Mahesh Rice Trading, Dubai"
-        description="Get a quote for Basmati or Non-Basmati rice from Mahesh Rice Trading — Ras Al Khor Industrial, Dubai, UAE. Reach us by WhatsApp, email or the enquiry form."
+        description="Get a quote for rice or pulses from Mahesh Rice Trading — Ras Al Khor Industrial, Dubai, UAE. Reach us by WhatsApp, email or the enquiry form."
         path="/contact"
       />
       <PageHero
@@ -124,8 +124,8 @@ export default function Contact() {
                   </Field>
                 </div>
 
-                <Field label="Rice Grade">
-                  <input type="text" value={form.product} onChange={update('product')} placeholder="e.g. 1121 Basmati, 20 MT" className={inputClass} />
+                <Field label="Product / Grade">
+                  <input type="text" value={form.product} onChange={update('product')} placeholder="e.g. IR64 Sortex 5%, 20 MT" className={inputClass} />
                 </Field>
 
                 <Field label="Message" required>
