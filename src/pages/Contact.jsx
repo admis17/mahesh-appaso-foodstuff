@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from 'framer-motion'
-import { Mail, MapPin, Clock, Send, MessageCircle, Copy, Check } from 'lucide-react'
+import { Mail, MapPin, Clock, Send, MessageCircle, Copy, Check, ChevronDown } from 'lucide-react'
 import Seo from '../components/Seo'
 import PageHero from '../components/PageHero'
 import SectionTag from '../components/SectionTag'
 import SocialLinks from '../components/SocialLinks'
 import { company, whatsappLink, mailtoLink } from '../data/company'
+import { products, subcategoryLabel } from '../data/products'
 import { isSupabaseConfigured } from '../lib/supabaseConfig'
 
 const infoCards = [
@@ -18,12 +19,17 @@ const infoCards = [
 const initialForm = { name: '', company_: '', email: '', phone: '', product: '', message: '' }
 const REQUIRED = ['name', 'email', 'message']
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const NAME = /^[A-Za-z][A-Za-z\s.'-]*$/
 
 function validate(form) {
   const errors = {}
   if (!form.name.trim()) errors.name = 'Please add your name.'
+  else if (!NAME.test(form.name.trim())) errors.name = 'Please use letters only for your name.'
   if (!form.email.trim()) errors.email = 'Please add your email.'
+  else if (!form.email.includes('@')) errors.email = 'Add @ to your email — e.g. you@gmail.com.'
   else if (!EMAIL.test(form.email.trim())) errors.email = 'That email address looks incomplete.'
+  const digits = form.phone.replace(/\D/g, '')
+  if (form.phone.trim() && digits.length < 7) errors.phone = 'Please enter a valid phone number (digits only).'
   if (!form.message.trim()) errors.message = 'Tell us a little about the order.'
   return errors
 }
@@ -217,6 +223,123 @@ function MapPinDrop() {
   )
 }
 
+/** Gold highlight for the typed part of a suggestion. */
+function Hi({ name, q }) {
+  if (!q) return name
+  const i = name.toLowerCase().indexOf(q)
+  if (i < 0) return name
+  return (
+    <>
+      {name.slice(0, i)}
+      <span className="text-gold">{name.slice(i, i + q.length)}</span>
+      {name.slice(i + q.length)}
+    </>
+  )
+}
+
+/** Product picker in the site's own card style: type to filter, arrows + Enter work, free text kept. */
+function ProductCombobox({ id, value, onType, onPick }) {
+  const [open, setOpen] = useState(false)
+  const [hi, setHi] = useState(0)
+  const q = value.trim().toLowerCase()
+  const matches = products
+    .filter((p) => p.status === 'active')
+    .filter((p) => !q || p.name.toLowerCase().includes(q))
+  const listId = `${id}-list`
+  const count = Math.max(matches.length, 1)
+
+  const pick = (name) => {
+    onPick(name)
+    setOpen(false)
+  }
+
+  const key = (e) => {
+    if (e.key === 'ArrowDown' && !open) {
+      setOpen(true)
+      setHi(0)
+      e.preventDefault()
+    } else if (e.key === 'ArrowDown') {
+      setHi((h) => (h + 1) % count)
+      e.preventDefault()
+    } else if (e.key === 'ArrowUp') {
+      setHi((h) => (h - 1 + count) % count)
+      e.preventDefault()
+    } else if (e.key === 'Enter' && open) {
+      e.preventDefault()
+      if (matches.length) pick(matches[hi % matches.length].name)
+      else setOpen(false)
+    } else if (e.key === 'Escape') {
+      setOpen(false)
+    }
+  }
+
+  return (
+    <div className="relative" onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setOpen(false) }}>
+      <input
+        id={id}
+        type="text"
+        role="combobox"
+        autoComplete="off"
+        aria-expanded={open}
+        aria-controls={listId}
+        aria-activedescendant={open && matches.length ? `${listId}-${hi % matches.length}` : undefined}
+        value={value}
+        onChange={(e) => {
+          onType(e)
+          setOpen(true)
+          setHi(0)
+        }}
+        onFocus={() => setOpen(true)}
+        onKeyDown={key}
+        className={`${inputClass} pr-10`}
+      />
+      <button
+        type="button"
+        aria-label={open ? 'Close product list' : 'Open product list'}
+        onClick={() => setOpen((o) => !o)}
+        className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full text-slate hover:text-deep transition-colors"
+      >
+        <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
+      </button>
+      {open && (
+        <ul
+          id={listId}
+          role="listbox"
+          aria-label="Products"
+          className="absolute left-0 right-0 top-full mt-2 z-30 max-h-60 overflow-y-auto rounded-xl border border-line/70 bg-ivory py-1.5 shadow-xl shadow-black/10"
+        >
+          {matches.map((p, i) => (
+            <li key={p.id} id={`${listId}-${i}`} role="option" aria-selected={p.name === value}>
+              <button
+                type="button"
+                tabIndex={-1}
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  pick(p.name)
+                }}
+                onMouseEnter={() => setHi(i)}
+                className={`flex w-full items-center justify-between gap-3 px-4 py-2.5 text-left transition-colors ${i === hi % matches.length ? 'bg-sand/70' : ''}`}
+              >
+                <span className="text-sm font-semibold text-ink">
+                  <Hi name={p.name} q={q} />
+                </span>
+                <span className="shrink-0 text-[11px] uppercase tracking-wide text-slate">
+                  {subcategoryLabel(p.category, p.subcategory)} · {p.entry}
+                </span>
+              </button>
+            </li>
+          ))}
+          {!matches.length && (
+            <li className="px-4 py-3 text-sm text-slate">
+              No match — keep “{value.trim()}” as a custom grade, or clear it to browse everything.
+            </li>
+          )}
+        </ul>
+      )}
+    </div>
+  )
+}
+
 export default function Contact() {
   const [params] = useSearchParams()
   // Product pages link here with ?product=… (including any chosen broken grade).
@@ -225,8 +348,12 @@ export default function Contact() {
   const [attempt, setAttempt] = useState(0)
   const [honeypot, setHoneypot] = useState('')
 
+  // Name takes letters only, phone takes digits only, email stays lowercase — anything else is fixed as typed.
   const update = (key) => (e) => {
-    const value = e.target.value
+    let value = e.target.value
+    if (key === 'name') value = value.replace(/[0-9]/g, '').slice(0, 80)
+    if (key === 'phone') value = value.replace(/[^0-9+\-().\s]/g, '').slice(0, 24)
+    if (key === 'email') value = value.toLowerCase().slice(0, 254)
     setForm((f) => ({ ...f, [key]: value }))
     if (errors[key]) setErrors((er) => ({ ...er, [key]: undefined }))
   }
@@ -323,10 +450,10 @@ export default function Contact() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.5, delay: infoCards.length * 0.08 }}
-              className="rounded-2xl p-6 border border-line/60 bg-sand/40"
+              className="rounded-2xl p-6 border border-line/60 bg-sand/40 flex flex-col"
             >
               <p className="eyebrow text-slate mb-4">Follow Us</p>
-              <SocialLinks className="text-ink" />
+              <SocialLinks className="text-ink flex-1 items-center justify-between py-1 [&_a]:w-16 [&_a]:h-16" iconClassName="w-7 h-7" />
             </motion.div>
           </div>
 
@@ -342,7 +469,7 @@ export default function Contact() {
                 Tell Us What You <span className="display-accent text-rust">Need</span>
               </h2>
 
-              <form className="space-y-5" noValidate>
+              <form className="space-y-5" noValidate onSubmit={(e) => e.preventDefault()}>
                 {/* Spam trap: invisible to people, tempting to form-filling bots. */}
                 <div aria-hidden="true" className="absolute -left-[9999px] w-px h-px overflow-hidden">
                   <label>
@@ -352,7 +479,7 @@ export default function Contact() {
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <Field {...field('name', 'Full Name', { required: true })}>
-                    <input type="text" autoComplete="name" {...inputProps('name')} />
+                    <input type="text" autoComplete="name" maxLength={80} {...inputProps('name')} />
                   </Field>
                   <Field {...field('company_', 'Company')}>
                     <input type="text" autoComplete="organization" {...inputProps('company_')} />
@@ -361,15 +488,34 @@ export default function Contact() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <Field {...field('email', 'Email', { required: true })}>
-                    <input type="email" autoComplete="email" {...inputProps('email')} />
+                    <input type="email" autoComplete="email" autoCapitalize="none" autoCorrect="off" spellCheck={false} inputMode="email" maxLength={254} {...inputProps('email')} />
                   </Field>
                   <Field {...field('phone', 'Phone')}>
-                    <input type="tel" autoComplete="tel" {...inputProps('phone')} />
+                    <input type="tel" autoComplete="tel" inputMode="tel" maxLength={24} {...inputProps('phone')} />
                   </Field>
                 </div>
 
+                <AnimatePresence>
+                  {form.email && !form.email.includes('@') && (
+                    <motion.p
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="text-xs text-gold overflow-hidden"
+                      role="status"
+                    >
+                      An email needs @ to work — e.g. yourname@gmail.com
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+
                 <Field {...field('product', 'Product / Grade')}>
-                  <input type="text" {...inputProps('product')} />
+                  <ProductCombobox
+                    id="f-product"
+                    value={form.product}
+                    onType={update('product')}
+                    onPick={(name) => setForm((f) => ({ ...f, product: name }))}
+                  />
                 </Field>
 
                 <Field {...field('message', 'Message', { required: true })}>
