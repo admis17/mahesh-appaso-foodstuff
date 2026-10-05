@@ -36,8 +36,8 @@ export default function GradedBanner() {
     <section ref={ref} className="relative overflow-hidden">
       <div className="h-[50vh] sm:h-[60vh] relative">
         <motion.img
-          src="https://images.unsplash.com/photo-1596797038530-2c107229654b?q=80&w=1800&auto=format&fit=crop"
-          alt="Raw rice grains graded for export quality"
+          src="/mill-to-market.webp"
+          alt="MA Foods Stuff premium rice and pulses"
           className="absolute inset-0 w-full h-full object-cover will-change-transform"
           style={{ scale }}
           loading="lazy"

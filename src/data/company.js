@@ -20,10 +20,10 @@ export const company = {
   },
 
   // Kept for the WhatsApp deep-link only — not displayed as text anywhere on the site.
-  phoneHref: '+971528186624',
-  whatsapp: '971528186624',
-  // Placeholder — client email wasn't on the certificate, confirm before launch.
-  email: 'info@maheshricetrading.com',
+  phoneHref: '+971569426266',
+  whatsapp: '971569426266',
+  // Contact inbox for the enquiry form and mailto links.
+  email: 'sbagroexport@gmail.com',
 
   hours: 'Sun – Fri, 9:00 AM – 6:00 PM',
 

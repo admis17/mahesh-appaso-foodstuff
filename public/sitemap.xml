@@ -21,6 +21,21 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/ir64-silky-sortex-raw</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/masuri-silky-sortex-raw</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/sona-masuri-steam</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://mahesh-appaso-foodstuff.vercel.app/products/pulses/lobia</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -66,17 +81,67 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/ir64-silky-sortex-raw</loc>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/sarbati-steam</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/masuri-silky-sortex-raw</loc>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/1121-steam</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/sona-masuri-steam</loc>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/1509-parboiled</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/1121-golden-sella</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/1509-steam</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/1401-steam</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/sambha-sella</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/sambha-steam-broken</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/100-raw-broken</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/swarna-masoorie</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/ir64-silky-sortexed</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/pr11-steam</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/products/rice/pr11-sella</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -99,5 +164,15 @@
     <loc>https://mahesh-appaso-foodstuff.vercel.app/contact</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/privacy</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+  <url>
+    <loc>https://mahesh-appaso-foodstuff.vercel.app/terms</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>

@@ -11,9 +11,11 @@ async function boot() {
     try {
       const { loadSiteData } = await import('./data/remote')
       const result = await loadSiteData()
-      if (result.reason || result.errors?.length) console.warn('Site content:', result)
+      if (result.reason || result.errors?.length) {
+        if (import.meta.env.DEV) console.warn('Site content:', result)
+      }
     } catch (err) {
-      console.warn('Site content: using built-in data —', err)
+      if (import.meta.env.DEV) console.warn('Site content: using built-in data —', err)
     }
   }
 

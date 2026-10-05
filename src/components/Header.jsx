@@ -18,14 +18,15 @@ const navItems = [
 function Logo({ compact = false }) {
   return (
     <Link to="/" className="flex items-center gap-3 shrink-0">
-      <svg viewBox="0 0 64 64" className={`shrink-0 transition-all duration-300 ${compact ? 'w-8 h-8 sm:w-9 sm:h-9' : 'w-9 h-9 sm:w-10 sm:h-10'}`}>
-        <circle cx="32" cy="32" r="32" fill="#0E3B2C" />
-        <path d="M32 12c8 6 12 13 12 20s-4 14-12 20c-8-6-12-13-12-20s4-14 12-20Z" fill="none" stroke="#D9A441" strokeWidth="2.5" />
-        <path d="M20.5 26h23M18 32h28M20.5 38h23" stroke="#D9A441" strokeWidth="2.5" strokeLinecap="round" />
-      </svg>
+      <img
+        src="/logo-sm.webp"
+        alt="MA Foods Stuff logo"
+        fetchpriority="high"
+        decoding="async"
+        className={`shrink-0 w-auto rounded-md transition-all duration-300 ${compact ? 'h-8 sm:h-9' : 'h-9 sm:h-10'}`}
+      />
       <span className="leading-tight">
-        <span className="block font-display font-semibold text-lg sm:text-xl text-ink tracking-tight">Mahesh</span>
-        <span className="block eyebrow text-[9px] sm:text-[10px] text-slate">Rice Trading</span>
+        <span className="block font-display font-semibold text-lg sm:text-xl text-ink tracking-tight whitespace-nowrap">MA Foods Stuff</span>
       </span>
     </Link>
   )

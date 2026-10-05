@@ -44,6 +44,6 @@ export async function saveEnquiry(form, channel) {
     channel,
     page: window.location.pathname,
   })
-  if (error) console.warn('Enquiry not saved to inbox:', error.message)
+  if (error && import.meta.env.DEV) console.warn('Enquiry not saved to inbox:', error.message)
   return !error
 }

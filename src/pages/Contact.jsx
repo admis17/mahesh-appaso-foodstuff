@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from 'framer-motion'
 import { Mail, MapPin, Clock, Send, MessageCircle, Copy, Check, ChevronDown } from 'lucide-react'
 import Seo from '../components/Seo'
@@ -126,29 +126,75 @@ function Field({ id, label, required, value, error, attempt, children }) {
   )
 }
 
-/** Ring that fills as the required fields are completed. */
+/** Ring that fills as the required fields are completed — the count rolls,
+    and the whole thing pops with a tick when everything is ready. */
 function CompletionRing({ done, total }) {
   const R = 16
   const C = 2 * Math.PI * R
+  const complete = done === total
   return (
-    <div className="flex items-center gap-3 text-xs text-slate" aria-live="polite">
-      <svg viewBox="0 0 40 40" className="w-10 h-10 -rotate-90">
-        <circle cx="20" cy="20" r={R} fill="none" stroke="var(--color-line)" strokeWidth="3" />
-        <motion.circle
-          cx="20"
-          cy="20"
-          r={R}
-          fill="none"
-          stroke={done === total ? 'var(--color-pine)' : 'var(--color-gold)'}
-          strokeWidth="3"
-          strokeLinecap="round"
-          strokeDasharray={C}
-          animate={{ strokeDashoffset: C * (1 - done / total) }}
-          transition={{ type: 'spring', stiffness: 120, damping: 18 }}
-        />
-      </svg>
-      <span>{done === total ? 'Ready to send' : `${done} of ${total} required fields`}</span>
-    </div>
+    <motion.div
+      className="flex items-center gap-3 text-xs text-slate"
+      aria-live="polite"
+      animate={complete ? { scale: [1, 1.07, 1] } : { scale: 1 }}
+      transition={{ duration: 0.45, ease: 'easeOut' }}
+    >
+      <span className="relative inline-flex">
+        <svg viewBox="0 0 40 40" className="w-10 h-10 -rotate-90">
+          <circle cx="20" cy="20" r={R} fill="none" stroke="var(--color-line)" strokeWidth="3" />
+          <motion.circle
+            cx="20"
+            cy="20"
+            r={R}
+            fill="none"
+            stroke={complete ? 'var(--color-pine)' : 'var(--color-gold)'}
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeDasharray={C}
+            animate={{ strokeDashoffset: C * (1 - done / total) }}
+            transition={{ type: 'spring', stiffness: 120, damping: 18 }}
+          />
+        </svg>
+        <AnimatePresence>
+          {complete && (
+            <motion.span
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 22 }}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <Check className="w-4 h-4 text-pine" />
+            </motion.span>
+          )}
+        </AnimatePresence>
+      </span>
+      {complete ? (
+        <motion.span
+          key="ready"
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="font-semibold text-pine"
+        >
+          Ready to send
+        </motion.span>
+      ) : (
+        <span>
+          <AnimatePresence mode="popLayout" initial={false}>
+            <motion.span
+              key={done}
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -10, opacity: 0 }}
+              transition={{ type: 'spring', stiffness: 500, damping: 32 }}
+              className="inline-block font-semibold text-ink"
+            >
+              {done}
+            </motion.span>
+          </AnimatePresence>{` of ${total} required fields`}
+        </span>
+      )}
+    </motion.div>
   )
 }
 
@@ -543,6 +589,9 @@ export default function Contact() {
                     <CompletionRing done={done} total={REQUIRED.length} />
                   </div>
                 </div>
+                <p className="text-xs text-slate pt-1">
+                  By sending, you agree to our <Link to="/privacy" className="underline hover:text-gold transition-colors">Privacy Policy</Link>.
+                </p>
               </form>
             </motion.div>
 

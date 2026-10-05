@@ -21,12 +21,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.3fr_0.8fr_1fr_1fr] gap-12 lg:gap-8">
           <div>
             <div className="flex items-center gap-3 mb-5">
-              <svg viewBox="0 0 64 64" className="w-10 h-10 shrink-0">
-                <circle cx="32" cy="32" r="32" fill="#D9A441" />
-                <path d="M32 12c8 6 12 13 12 20s-4 14-12 20c-8-6-12-13-12-20s4-14 12-20Z" fill="none" stroke="#0E3B2C" strokeWidth="2.5" />
-                <path d="M20.5 26h23M18 32h28M20.5 38h23" stroke="#0E3B2C" strokeWidth="2.5" strokeLinecap="round" />
-              </svg>
-              <span className="font-display text-xl font-semibold">Mahesh Rice Trading</span>
+              <img src="/logo-sm.webp" alt="MA Foods Stuff logo" loading="lazy" decoding="async" className="h-10 w-auto shrink-0 rounded-md" />
+              <span className="font-display text-xl font-semibold">MA Foods Stuff</span>
             </div>
             <p className="text-ivory/65 text-sm leading-relaxed max-w-sm mb-6">
               Dubai-based trader of rice and pulses, supplying
@@ -89,6 +85,8 @@ export default function Footer() {
             © {year} {company.legalNameEn}. All rights reserved.
           </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-ivory/55">
+            <Link to="/privacy" className="hover:text-gold-light transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="hover:text-gold-light transition-colors">Terms of Use</Link>
             <span className="inline-flex items-center gap-1.5">
               <ShieldCheck className="w-3.5 h-3.5 text-gold" /> TRN {company.trn}
             </span>

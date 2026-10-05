@@ -151,6 +151,9 @@
     width: auto;
     overflow-x: auto;
   }
+  .animate-float-slow {
+    animation: none;
+  }
 }
 
 @keyframes float-slow {
@@ -159,4 +162,12 @@
 }
 .animate-float-slow {
   animation: float-slow 6s ease-in-out infinite;
+}
+
+/* Visible keyboard focus everywhere, in the site's gold — most interactive
+   elements otherwise show no focus state at all. */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 3px;
+  border-radius: 4px;
 }

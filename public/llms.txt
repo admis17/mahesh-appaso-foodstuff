@@ -1,0 +1,33 @@
+# MA Foods Stuff — mahesh-appaso-foodstuff.vercel.app
+
+Dubai-based trader (Mahesh Appaso Foodstuff Trading L.L.C, TRN 105507496500003)
+of Indian Basmati & non-Basmati rice and pulses to wholesale buyers worldwide.
+
+## Pages
+
+- Home: https://mahesh-appaso-foodstuff.vercel.app/
+- Products (full manifest): https://mahesh-appaso-foodstuff.vercel.app/products
+- Rice: https://mahesh-appaso-foodstuff.vercel.app/products/rice
+- Pulses: https://mahesh-appaso-foodstuff.vercel.app/products/pulses
+- Services: https://mahesh-appaso-foodstuff.vercel.app/trade
+- Global reach: https://mahesh-appaso-foodstuff.vercel.app/markets
+- Company: https://mahesh-appaso-foodstuff.vercel.app/company
+- Contact / enquiry form: https://mahesh-appaso-foodstuff.vercel.app/contact
+- Privacy: https://mahesh-appaso-foodstuff.vercel.app/privacy
+- Terms: https://mahesh-appaso-foodstuff.vercel.app/terms
+
+## Flagship products (always listed first)
+
+- Silky Sortex Raw IR64 (broken grades 5–100%): https://mahesh-appaso-foodstuff.vercel.app/products/rice/ir64-silky-sortex-raw
+- Silky Sortex Raw Masuri (broken grades 5–25%): https://mahesh-appaso-foodstuff.vercel.app/products/rice/masuri-silky-sortex-raw
+- Steam Sona Masuri: https://mahesh-appaso-foodstuff.vercel.app/products/rice/sona-masuri-steam
+
+## Basmati range
+
+1121 Steam, 1121 Golden Sella, 1509 Steam, 1509 Parboiled, 1401 Steam, Sarbati Steam.
+
+## Contact
+
+- Email: sbagroexport@gmail.com
+- WhatsApp: +971 56 942 6266
+- Address: SMARK 2, Office 3, Ras Al Khor Industrial 2, Dubai, UAE
