@@ -34,7 +34,9 @@ export default function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-deep px-6">
       <form onSubmit={signIn} className="w-full max-w-sm rounded-2xl bg-ivory p-8 shadow-2xl">
-        <p className="eyebrow text-rust mb-2">Mahesh Rice Trading</p>
+        <p className="eyebrow text-rust mb-2 flex items-center gap-2">
+          <img src="/logo-sm.webp" alt="" className="h-6 w-auto rounded" /> MA Foods Stuff
+        </p>
         <h1 className="font-display text-2xl font-semibold text-ink mb-6">Admin sign in</h1>
         <div className="space-y-4">
           <Field label="Email">

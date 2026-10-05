@@ -56,7 +56,10 @@ function Shell({ user, children }) {
   return (
     <div className="min-h-screen bg-sand/40 lg:grid lg:grid-cols-[15rem_1fr]">
       <aside className="hidden lg:flex flex-col bg-deep text-ivory p-5 sticky top-0 h-screen">
-        <Link to="/admin" className="font-display text-xl font-semibold mb-1">Mahesh Admin</Link>
+        <Link to="/admin" className="flex items-center gap-2.5 mb-1">
+          <img src="/logo-sm.webp" alt="MA Foods Stuff logo" className="h-8 w-auto rounded" />
+          <span className="font-display text-xl font-semibold">MA Admin</span>
+        </Link>
         <p className="text-xs text-ivory/50 mb-8">Content &amp; enquiries</p>
         {sidebar}
         <div className="mt-auto space-y-3 text-sm">
@@ -72,7 +75,9 @@ function Shell({ user, children }) {
 
       {/* Phone / tablet top bar */}
       <header className="lg:hidden sticky top-0 z-30 bg-deep text-ivory flex items-center justify-between px-4 h-14">
-        <span className="font-display text-lg font-semibold">Mahesh Admin</span>
+        <span className="flex items-center gap-2 font-display text-lg font-semibold">
+          <img src="/logo-sm.webp" alt="MA Foods Stuff logo" className="h-7 w-auto rounded" /> MA Admin
+        </span>
         <button type="button" aria-label="Toggle menu" onClick={() => setOpen((o) => !o)} className="p-2 -mr-2">
           {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -152,7 +157,7 @@ export default function AdminApp() {
 
   return (
     <>
-      <title>Admin | Mahesh Rice Trading</title>
+      <title>Admin | MA Foods Stuff</title>
       <meta name="robots" content="noindex, nofollow" />
       {isSupabaseConfigured || demo ? <Gate /> : <Setup onPreview={preview} />}
     </>
